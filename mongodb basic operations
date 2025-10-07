@@ -1,0 +1,85 @@
+// ===============================
+// 🚀 MongoDB Basic CRUD Practice
+// Ubuntu 22.04 | MongoDB 7.0
+// ===============================
+
+// -------------------------------
+// 🔹 Step 1: Connect to Mongo Shell
+// -------------------------------
+mongosh
+
+// -------------------------------
+// 🔹 Step 2: Create / Switch Database
+// -------------------------------
+use school
+
+// -------------------------------
+// 🔹 Step 3: Create (Insert Data)
+// -------------------------------
+// Insert one document
+db.students.insertOne({ name: "Alice", age: 20, grade: "A" })
+
+// Insert multiple documents
+db.students.insertMany([
+  { name: "Alice", age: 20, grade: "A" },
+  { name: "Bob", age: 22, grade: "B" },
+  { name: "Charlie", age: 21, grade: "A" },
+  { name: "Diana", age: 23, grade: "C" },
+  { name: "Evan", age: 20, grade: "B" }
+])
+
+// -------------------------------
+// 🔹 Step 4: Read (Retrieve Data)
+// -------------------------------
+// Show all documents
+db.students.find()
+
+// Pretty-print results
+db.students.find().pretty()
+
+// Filter (grade = "A")
+db.students.find({ grade: "A" })
+
+// Comparison operators
+db.students.find({ age: { $gt: 21 } })     // greater than 21
+db.students.find({ age: { $lt: 22 } })     // less than 22
+
+// Logical operators
+db.students.find({
+  $or: [
+    { grade: "A" },
+    { age: { $lt: 21 } }
+  ]
+})
+
+// Projection (show specific fields)
+db.students.find({}, { name: 1, age: 1, _id: 0 })
+
+// Sorting
+db.students.find().sort({ age: 1 })   // ascending
+db.students.find().sort({ age: -1 })  // descending
+
+// Count and pagination
+db.students.countDocuments()               // count all
+db.students.countDocuments({ grade: "B" }) // count filter
+db.students.find().limit(2)                // limit results
+db.students.find().skip(2)                 // skip first 2
+
+// -------------------------------
+// 🔹 Step 5: Update (Modify Data)
+// -------------------------------
+db.students.updateOne(
+  { name: "Alice" },
+  { $set: { grade: "A+" } }
+)
+
+// -------------------------------
+// 🔹 Step 6: Delete (Remove Data)
+// -------------------------------
+db.students.deleteOne({ name: "Alice" })
+db.students.deleteMany({ grade: "C" }) // optional example
+
+// -------------------------------
+// 🔹 Step 7: Check Collection
+// -------------------------------
+db.students.find()
