@@ -1,0 +1,270 @@
+admin1@admin1-HP-Pro-SFF-280-G9-Desktop-PC:~$ mongosh
+Current Mongosh Log ID:	68e892dbe612dc51a3ce5f46
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:		7.0.25
+Using Mongosh:		2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-10T15:44:12.782+05:30: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2025-10-10T15:44:13.093+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2025-10-10T15:44:13.093+05:30: vm.max_map_count is too low
+------
+
+test> use donation;
+donation> db.donor.insertMany([{_id:1, name:"Tejaswini Patil", age:20, bg:"O+",city:"Pune"},{_id:2, name:"Rajashree Bores", age:19, bg:"O+",city:"Jalgaon"},{_id:3, name:"Gauri Sarde", age:23, bg:"A+",city:"Satara"}{_id:4, name:"Shweta Magar", age:28, bg:"B+",city:"Warje"}{_id:5, name:"Sahil Naik", age:22, bg:"B+",city:"SambhajiNagar"}{_id:6, name:"Stavan Gaikwad", age:20, bg:"AB+",city:"Pune"}{_id:7, name:"Minal Kasbey", age:48, bg:"O+",city:"Pune"}{_id:8, name:"Siddhant Waskar", age:41, bg:"B+",city:"Jalgaon"}{_id:9, name:"Sainath K", age:30, bg:"A+",city:"Pune"}{_id:10, name:"Divya Patil", age:20, bg:"O+",city:"Satara"}]);
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:204)
+
+> 1 | db.donor.insertMany([{_id:1, name:"Tejaswini Patil", age:20, bg:"O+",city:"Pune"},{_id:2, name:"Rajashree Bores", age:19, bg:"O+",city:"Jalgaon"},{_id:3, name:"Gauri Sarde", age:23, bg:"A+",city:"Satara"}{_id:4, name:"Shweta Magar", age:28, bg:"B+",city:"Warje"}{_id:5, name:"Sahil Naik", age:22, bg:"B+",city:"SambhajiNagar"}{_id:6, name:"Stavan Gaikwad", age:20, bg:"AB+",city:"Pune"}{_id:7, name:"Minal Kasbey", age:48, bg:"O+",city:"Pune"}{_id:8, name:"Siddhant Waskar", age:41, bg:"B+",city:"Jalgaon"}{_id:9, name:"Sainath K", age:30, bg:"A+",city:"Pune"}{_id:10, name:"Divya Patil", age:20, bg:"O+",city:"Satara"}]);
+    |                                                                                                                                                                                                             ^
+  2 |
+
+donation> db.donor.insertMany([{_id:1, name:"Tejaswini Patil", age:20, bg:"O+",city:"Pune"},{_id:2, name:"Rajashree Bores", age:19, bg:"O+",city:"Jalgaon"},{_id:3, name:"Gauri Sarde", age:23, bg:"A+",city:"Satara"},{_id:4, name:"Shweta Magar", age:28, bg:"B+",city:"Warje"},{_id:5, name:"Sahil Naik", age:22, bg:"B+",city:"SambhajiNagar"},{_id:6, name:"Stavan Gaikwad", age:20, bg:"AB+",city:"Pune"},{_id:7, name:"Minal Kasbey", age:48, bg:"O+",city:"Pune"},{_id:8, name:"Siddhant Waskar", age:41, bg:"B+",city:"Jalgaon"},{_id:9, name:"Sainath K", age:30, bg:"A+",city:"Pune"},{_id:10, name:"Divya Patil", age:20, bg:"O+",city:"Satara"}]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': 1,
+    '1': 2,
+    '2': 3,
+    '3': 4,
+    '4': 5,
+    '5': 6,
+    '6': 7,
+    '7': 8,
+    '8': 9,
+    '9': 10
+  }
+}
+donation> db.donor.find();
+[
+  { _id: 1, name: 'Tejaswini Patil', age: 20, bg: 'O+', city: 'Pune' },
+  {
+    _id: 2,
+    name: 'Rajashree Bores',
+    age: 19,
+    bg: 'O+',
+    city: 'Jalgaon'
+  },
+  { _id: 3, name: 'Gauri Sarde', age: 23, bg: 'A+', city: 'Satara' },
+  { _id: 4, name: 'Shweta Magar', age: 28, bg: 'B+', city: 'Warje' },
+  {
+    _id: 5,
+    name: 'Sahil Naik',
+    age: 22,
+    bg: 'B+',
+    city: 'SambhajiNagar'
+  },
+  { _id: 6, name: 'Stavan Gaikwad', age: 20, bg: 'AB+', city: 'Pune' },
+  { _id: 7, name: 'Minal Kasbey', age: 48, bg: 'O+', city: 'Pune' },
+  {
+    _id: 8,
+    name: 'Siddhant Waskar',
+    age: 41,
+    bg: 'B+',
+    city: 'Jalgaon'
+  },
+  { _id: 9, name: 'Sainath K', age: 30, bg: 'A+', city: 'Pune' },
+  { _id: 10, name: 'Divya Patil', age: 20, bg: 'O+', city: 'Satara' }
+]
+donation> db.donor.find({city:"Pune"});
+[
+  { _id: 1, name: 'Tejaswini Patil', age: 20, bg: 'O+', city: 'Pune' },
+  { _id: 6, name: 'Stavan Gaikwad', age: 20, bg: 'AB+', city: 'Pune' },
+  { _id: 7, name: 'Minal Kasbey', age: 48, bg: 'O+', city: 'Pune' },
+  { _id: 9, name: 'Sainath K', age: 30, bg: 'A+', city: 'Pune' }
+]
+donation> db.donor.createIndex({name:1, bg:-1});
+name_1_bg_-1
+donation> db.donor.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { name: 1, bg: -1 }, name: 'name_1_bg_-1' }
+]
+donation> 
+(To exit, press Ctrl+C again or Ctrl+D or type .exit)
+donation> db.donor.aggregate([{}])
+MongoServerError[Location40323]: A pipeline stage specification object must contain exactly one field.
+donation> db.donor.aggregate([{$match:{cit:"Satara"}}])
+
+donation> db.donor.aggregate([{$match:{cit:"Satara"}}]);
+
+donation> db.donor.aggregate([{$match:{city:"Satara"}}]);
+[
+  { _id: 3, name: 'Gauri Sarde', age: 23, bg: 'A+', city: 'Satara' },
+  { _id: 10, name: 'Divya Patil', age: 20, bg: 'O+', city: 'Satara' }
+]
+donation> db.donor.aggregate({group:{_id:"$city"},{total_users:{$sum:1}}})
+Uncaught:
+SyntaxError: Unexpected token (1:40)
+
+> 1 | db.donor.aggregate({group:{_id:"$city"},{total_users:{$sum:1}}})
+    |                                         ^
+  2 |
+
+donation> db.donor.aggregate({group:{_id:"$city",total_users:{$sum:1}}})
+MongoServerError[Location40324]: Unrecognized pipeline stage name: 'group'
+donation> db.donor.aggregate({$group:{_id:"$city",total_users:{$sum:1}}})
+[
+  { _id: 'Jalgaon', total_users: 2 },
+  { _id: 'Satara', total_users: 2 },
+  { _id: 'Warje', total_users: 1 },
+  { _id: 'Pune', total_users: 4 },
+  { _id: 'SambhajiNagar', total_users: 1 }
+]
+donation> db.donor.aggregate({$group:{_id:"$city",avg_age:{$avg:"age"}}})
+[
+  { _id: 'Jalgaon', avg_age: null },
+  { _id: 'Satara', avg_age: null },
+  { _id: 'Warje', avg_age: null },
+  { _id: 'Pune', avg_age: null },
+  { _id: 'SambhajiNagar', avg_age: null }
+]
+donation> db.donor.aggregate({$group:{_id:"$city",avg_age:{$avg:"$age"}}})
+[
+  { _id: 'Jalgaon', avg_age: 30 },
+  { _id: 'Satara', avg_age: 21.5 },
+  { _id: 'Warje', avg_age: 28 },
+  { _id: 'Pune', avg_age: 29.5 },
+  { _id: 'SambhajiNagar', avg_age: 22 }
+]
+donation> db.donor.find();
+[
+  { _id: 1, name: 'Tejaswini Patil', age: 20, bg: 'O+', city: 'Pune' },
+  {
+    _id: 2,
+    name: 'Rajashree Bores',
+    age: 19,
+    bg: 'O+',
+    city: 'Jalgaon'
+  },
+  { _id: 3, name: 'Gauri Sarde', age: 23, bg: 'A+', city: 'Satara' },
+  { _id: 4, name: 'Shweta Magar', age: 28, bg: 'B+', city: 'Warje' },
+  {
+    _id: 5,
+    name: 'Sahil Naik',
+    age: 22,
+    bg: 'B+',
+    city: 'SambhajiNagar'
+  },
+  { _id: 6, name: 'Stavan Gaikwad', age: 20, bg: 'AB+', city: 'Pune' },
+  { _id: 7, name: 'Minal Kasbey', age: 48, bg: 'O+', city: 'Pune' },
+  {
+    _id: 8,
+    name: 'Siddhant Waskar',
+    age: 41,
+    bg: 'B+',
+    city: 'Jalgaon'
+  },
+  { _id: 9, name: 'Sainath K', age: 30, bg: 'A+', city: 'Pune' },
+  { _id: 10, name: 'Divya Patil', age: 20, bg: 'O+', city: 'Satara' }
+]
+donation> db.donor.find({city:"Pune"}).explain("executionStats")
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'donation.donor',
+    indexFilterSet: false,
+    parsedQuery: { city: { '$eq': 'Pune' } },
+    queryHash: 'D87C15E0',
+    planCacheKey: 'D87C15E0',
+    optimizationTimeMillis: 0,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    winningPlan: {
+      stage: 'COLLSCAN',
+      filter: { city: { '$eq': 'Pune' } },
+      direction: 'forward'
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 4,
+    executionTimeMillis: 0,
+    totalKeysExamined: 0,
+    totalDocsExamined: 10,
+    executionStages: {
+      stage: 'COLLSCAN',
+      filter: { city: { '$eq': 'Pune' } },
+      nReturned: 4,
+      executionTimeMillisEstimate: 0,
+      works: 11,
+      advanced: 4,
+      needTime: 6,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      direction: 'forward',
+      docsExamined: 10
+    }
+  },
+  command: { find: 'donor', filter: { city: 'Pune' }, '$db': 'donation' },
+  serverInfo: {
+    host: 'admin1-HP-Pro-SFF-280-G9-Desktop-PC',
+    port: 27017,
+    version: '7.0.25',
+    gitVersion: '96dce3da49b8d2e9e0d328048cb56930eb1bdb2b'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFrameworkControl: 'forceClassicEngine'
+  },
+  ok: 1
+}
+donation> db.donor.aggregate({})
+MongoServerError[Location40323]: A pipeline stage specification object must contain exactly one field.
+donation> db.donor.aggregate({ $project{name:1, age:1, bg:1}})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:29)
+
+> 1 | db.donor.aggregate({ $project{name:1, age:1, bg:1}})
+    |                              ^
+  2 |
+
+donation> db.donor.aggregate([{ $project{name:1, age:1, bg:1}}])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:30)
+
+> 1 | db.donor.aggregate([{ $project{name:1, age:1, bg:1}}])
+    |                               ^
+  2 |
+
+donation> db.donor.aggregate([{ $project:{name:1, age:1, bg:1}}])
+[
+  { _id: 1, name: 'Tejaswini Patil', age: 20, bg: 'O+' },
+  { _id: 2, name: 'Rajashree Bores', age: 19, bg: 'O+' },
+  { _id: 3, name: 'Gauri Sarde', age: 23, bg: 'A+' },
+  { _id: 4, name: 'Shweta Magar', age: 28, bg: 'B+' },
+  { _id: 5, name: 'Sahil Naik', age: 22, bg: 'B+' },
+  { _id: 6, name: 'Stavan Gaikwad', age: 20, bg: 'AB+' },
+  { _id: 7, name: 'Minal Kasbey', age: 48, bg: 'O+' },
+  { _id: 8, name: 'Siddhant Waskar', age: 41, bg: 'B+' },
+  { _id: 9, name: 'Sainath K', age: 30, bg: 'A+' },
+  { _id: 10, name: 'Divya Patil', age: 20, bg: 'O+' }
+]
+donation> db.donor.aggregate([{ $project:{name:1, age:1, bg:1,_id:0}}])
+[
+  { name: 'Tejaswini Patil', age: 20, bg: 'O+' },
+  { name: 'Rajashree Bores', age: 19, bg: 'O+' },
+  { name: 'Gauri Sarde', age: 23, bg: 'A+' },
+  { name: 'Shweta Magar', age: 28, bg: 'B+' },
+  { name: 'Sahil Naik', age: 22, bg: 'B+' },
+  { name: 'Stavan Gaikwad', age: 20, bg: 'AB+' },
+  { name: 'Minal Kasbey', age: 48, bg: 'O+' },
+  { name: 'Siddhant Waskar', age: 41, bg: 'B+' },
+  { name: 'Sainath K', age: 30, bg: 'A+' },
+  { name: 'Divya Patil', age: 20, bg: 'O+' }
+]
+donation> 
