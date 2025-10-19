@@ -1,0 +1,45 @@
+-- Correct SQL Queries Compiled
+
+-- 1. Describe account table
+DESC account;
+
+-- 2. Check for existing loan before insert
+SELECT * FROM loan WHERE loan_no = 980;
+
+-- 3. Filter loans by branch and amount
+SELECT loan_no 
+FROM loan 
+WHERE branch_name = 'akurdi' AND amount > 1200;
+
+-- 4. Join customer, borrower, and loan
+SELECT customer.cust_name, loan.loan_no, loan.amount
+FROM customer
+JOIN borrower ON customer.cust_name = borrower.cust_name
+JOIN loan ON borrower.loan_no = loan.loan_no;
+
+-- 5. Find all customers with account or loan (or both)
+SELECT cust_name FROM depositor
+UNION
+SELECT cust_name FROM borrower;
+
+-- 6. Count accounts per branch
+SELECT account.branch_name, COUNT(*) AS total_accounts
+FROM depositor
+INNER JOIN account ON depositor.acc_no = account.acc_no
+GROUP BY account.branch_name;
+
+-- 7. Pattern matching with LIKE
+SELECT cust_name, cust_city 
+FROM customer 
+WHERE cust_name LIKE 'T__';
+
+-- 8. Branches with average balance > 1000
+SELECT branch.branch_name
+FROM branch
+INNER JOIN account ON branch.branch_name = account.branch_name
+GROUP BY branch.branch_name
+HAVING AVG(account.balance) > 1000;
+
+-- 9. Delete rows with amount < 5000
+DELETE FROM loan 
+WHERE amount < 5000;
