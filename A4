@@ -1,0 +1,49 @@
+DECLARE
+  p_roll NUMBER(5);
+  p_bookname VARCHAR(30);
+  p_amount NUMBER(5);
+  p_days NUMBER(3);
+  no_data EXCEPTION;
+  current_date DATE := SYSDATE;
+  p_issue_date DATE;
+BEGIN
+  p_roll := &p_roll;
+  p_bookname := '&p_bookname';
+
+  IF p_roll <= 0 THEN
+    RAISE no_data;
+  END IF;
+
+  SELECT issue_date INTO p_issue_date
+  FROM Borrower
+  WHERE Roll_no = p_roll AND book_name = p_bookname;
+
+  p_days := TRUNC(current_date) - p_issue_date;
+  DBMS_OUTPUT.PUT_LINE('No of days is ' || p_days);
+
+  IF p_days > 30 THEN
+    p_amount := 150 + ((p_days - 30) * 50);
+  ELSIF p_days >= 15 AND p_days <= 30 THEN
+    p_amount := p_days * 5;
+  ELSE
+    p_amount := 0;
+  END IF;
+
+  DBMS_OUTPUT.PUT_LINE('Fine charged: ' || p_amount);
+
+  IF p_amount > 0 THEN
+    INSERT INTO fine (roll, date1, amt) VALUES (p_roll, SYSDATE, p_amount);
+    UPDATE Borrower
+    SET status = 'R'
+    WHERE Roll_no = p_roll AND book_name = p_bookname;
+  END IF;
+
+EXCEPTION
+  WHEN no_data THEN
+    DBMS_OUTPUT.PUT_LINE('Invalid roll number.');
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No entry found for the provided roll number and book.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An unexpected error occurred: ' || SQLERRM);
+END;
+/
