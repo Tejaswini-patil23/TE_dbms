@@ -1,0 +1,17 @@
+create table areas(radius decimal(5), area decimal(5,5) );
+
+declare 
+area decimal(10,2);
+pi decimal(4,2):=3.14;
+begin
+for radius in 5..9 loop
+area:=pi*radius*radius;
+insert into areas (radius,area) values(radius,area);
+end loop;
+exception
+when invalid then dbms_output.put_line('Radius cannot be less than zero');
+when radius_not_in_range then dbms_output.put_line('Radius not between 5 and 9');
+
+end;
+/
+
