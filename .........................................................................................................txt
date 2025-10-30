@@ -1,0 +1,1116 @@
+#A2
+
+CREATE DATABASE Database_A2;
+USE Database_A2;
+
+CREATE TABLE Account (
+  acc_no INT,
+  branch_name VARCHAR(255),
+  balance INT,
+  PRIMARY KEY (acc_no)
+);
+
+CREATE TABLE Branch (
+  branch_name VARCHAR(255),
+  branch_city VARCHAR(255),
+  assets INT,
+  PRIMARY KEY (branch_name)
+);
+
+CREATE TABLE Customer (
+  cust_name VARCHAR(255),
+  cust_street VARCHAR(255),
+  cust_city VARCHAR(255),
+  PRIMARY KEY (cust_name)
+);
+
+CREATE TABLE Depositor (
+  cust_name VARCHAR(255),
+  acc_no INT
+);
+
+CREATE TABLE Loan (
+  loan_no INT,
+  branch_name VARCHAR(255),
+  amount INT,
+  PRIMARY KEY (loan_no)
+);
+
+CREATE TABLE Borrower (
+  cust_name VARCHAR(255),
+  loan_no INT
+);
+
+ALTER TABLE Account ADD FOREIGN KEY (branch_name) REFERENCES Branch (branch_name);
+ALTER TABLE Depositor ADD FOREIGN KEY (cust_name) REFERENCES Customer (cust_name);
+ALTER TABLE Depositor ADD FOREIGN KEY (acc_no) REFERENCES Account (acc_no);
+ALTER TABLE Loan ADD FOREIGN KEY (branch_name) REFERENCES Branch (branch_name);
+ALTER TABLE Borrower ADD FOREIGN KEY (cust_name) REFERENCES Customer (cust_name);
+ALTER TABLE Borrower ADD FOREIGN KEY (loan_no) REFERENCES Loan (loan_no);
+
+INSERT INTO Branch (branch_name, branch_city, assets) VALUES
+('Akurdi', 'Pune', 5000000),
+('Nigdi', 'Pune', 3000000),
+('Kharadi', 'Pune', 4000000),
+('Hadapsar', 'Pune', 3500000),
+('Viman Nagar', 'Pune', 4500000);
+
+INSERT INTO Account (acc_no, branch_name, balance) VALUES
+(101, 'Akurdi', 15000),
+(102, 'Nigdi', 8000),
+(103, 'Kharadi', 20000),
+(104, 'Hadapsar', 12000),
+(105, 'Viman Nagar', 5000);
+
+INSERT INTO Customer (cust_name, cust_street, cust_city) VALUES
+('Kalas', 'Street 1', 'Pune'),
+('Mehul', 'Street 2', 'Pune'),
+('Tanmay', 'Street 3', 'Pune'),
+('Kshitij', 'Street 4', 'Pune'),
+('Aditya', 'Street 5', 'Pune');
+
+INSERT INTO Depositor (cust_name, acc_no) VALUES
+('Kalas', 101),
+('Mehul', 102),
+('Tanmay', 103),
+('Kshitij', 101),
+('Aditya', 104);
+
+INSERT INTO Loan (loan_no, branch_name, amount) VALUES
+(201, 'Akurdi', 15000),
+(202, 'Nigdi', 13000),
+(203, 'Kharadi', 25000),
+(204, 'Hadapsar', 18000),
+(205, 'Akurdi', 1400);
+
+INSERT INTO Borrower (cust_name, loan_no) VALUES
+('Mehul', 202),
+('Tanmay', 203),
+('Aditya', 205);
+
+SELECT DISTINCT branch_name FROM Loan;
+
+SELECT loan_no FROM Loan WHERE branch_name = 'Akurdi' AND amount > 12000;
+
+SELECT * from Borrower;
+SELECT Borrower.cust_name, Borrower.loan_no, Loan.amount FROM Borrower INNER JOIN Loan ON Borrower.loan_no = Loan.loan_no;
+
+SELECT cust_name FROM Borrower INNER JOIN Loan ON Borrower.loan_no = Loan.loan_no WHERE branch_name = 'Akurdi' ORDER BY cust_name;
+
+SELECT cust_name FROM Depositor UNION SELECT cust_name FROM Borrower;
+
+SELECT cust_name FROM Depositor INTERSECT SELECT cust_name FROM Borrower;
+
+SELECT cust_name FROM Depositor WHERE cust_name NOT IN (SELECT cust_name FROM Borrower);
+
+-- OR YOU CAN RUN THE BELOW COMMAND IF YOU ARE FEELING FANCY
+-- SELECT Customer.cust_name FROM Customer INNER JOIN Depositor ON Customer.cust_name = Depositor.cust_name LEFT JOIN Borrower ON Customer.cust_name = Borrower.cust_name WHERE Borrower.cust_name IS NULL;
+
+SELECT branch_name, AVG(balance) FROM Account GROUP BY branch_name;
+
+SELECT branch_name, COUNT(*) FROM Account INNER JOIN Depositor ON Account.acc_no = Depositor.acc_no GROUP BY branch_name;
+
+SELECT cust_name, cust_city FROM Customer WHERE cust_name LIKE 'K%';
+
+SELECT DISTINCT branch_city FROM Branch;
+
+SELECT branch_name FROM Account GROUP BY branch_name HAVING AVG(balance) > 12000;
+
+SELECT COUNT(*) FROM Customer;
+
+SELECT SUM(amount) FROM Loan;
+
+DELETE FROM Borrower WHERE loan_no IN (SELECT loan_no FROM Loan WHERE amount BETWEEN 1300 AND 1500);
+DELETE FROM Loan WHERE amount BETWEEN 1300 AND 1500;
+
+DELETE FROM Borrower WHERE loan_no IN (SELECT loan_no FROM Loan WHERE branch_name = 'Nigdi');
+DELETE FROM Loan WHERE branch_name = 'Nigdi';
+DELETE FROM Depositor WHERE acc_no IN (SELECT acc_no FROM Account WHERE branch_name = 'Nigdi');
+DELETE FROM Account WHERE branch_name = 'Nigdi';
+DELETE FROM Branch WHERE branch_name = 'Nigdi';
+
+#A3
+CREATE DATABASE Database_A3;
+USE Database_A3;
+
+CREATE TABLE Account(acc_no INT, branch_name VARCHAR(50), balance INT, PRIMARY KEY (acc_no));
+CREATE TABLE Branch(branch_name VARCHAR(50), branch_city VARCHAR(50), assets INT, PRIMARY KEY (branch_name));
+CREATE TABLE Customer (cust_name VARCHAR(50), cust_street VARCHAR(50), cust_city VARCHAR(50), PRIMARY KEY (cust_name));
+CREATE TABLE Depositor (cust_name VARCHAR(50), acc_no INT);
+CREATE TABLE Loan (loan_no INT, branch_name VARCHAR(50), amount INT, PRIMARY KEY (loan_no));
+CREATE TABLE Borrower (cust_name VARCHAR(50), loan_no INT);
+
+ALTER TABLE Account ADD FOREIGN KEY (branch_name) REFERENCES Branch(branch_name);
+ALTER TABLE Depositor ADD FOREIGN KEY (cust_name) REFERENCES Customer (cust_name);
+ALTER TABLE Depositor ADD FOREIGN KEY (acc_no) REFERENCES Account (acc_no);
+ALTER TABLE Loan ADD FOREIGN KEY (branch_name) REFERENCES Branch (branch_name);
+ALTER TABLE Borrower ADD FOREIGN KEY (cust_name) REFERENCES Customer (cust_name);
+ALTER TABLE Borrower ADD FOREIGN KEY (loan_no) REFERENCES Loan (loan_no);
+
+INSERT INTO Branch (branch_name, branch_city, assets) VALUES
+("Pune_Station", "Pune", 5000),
+("Hadapsar", "Pune", 20000),
+("Dhole_Patil", "Mumbai", 7500),
+("Nagarwala", "Nandurbar", 3200);
+
+INSERT INTO Customer (cust_name, cust_street, cust_city) VALUES
+("Kalas", "Airport Road", "Pune"),
+("Mehul", "Shahdha", "Nandurbar"),
+("Tanmay", "Porwal Road", "Pune"),
+("Kshitij", "Hadapasar", "Pune"),
+("Aditya", "Mira RD", "Mumbai"),
+("Himanshu", "Smart City", "Nandurbar");
+
+INSERT INTO Account (acc_no, branch_name, balance) VALUES
+(2501, "Dhole_Patil", 5000),
+(2511, "Pune_Station", 1500),
+(2521, "Hadapsar", 2000),
+(2512, "Nagarwala", 5000),
+(2531, "Pune_Station", 1000);
+
+INSERT INTO Loan (loan_no, branch_name, amount) VALUES
+(155, "Dhole_Patil", 500),
+(156, "Pune_Station", 250),
+(157, "Hadapsar", 600),
+(158, "Nagarwala", 1400),
+(159, "Pune_Station", 25000);
+
+INSERT INTO Borrower VALUES
+("Kalas", 156),
+("Mehul", 158),
+("Tanmay", 155),
+("Kshitij", 157),
+("Aditya", 159),
+("Himanshu", 158);
+
+INSERT INTO Depositor VALUES
+("Kalas", 2511),
+("Mehul", 2512),
+("Tanmay", 2501),
+("Kshitij", 2521),
+("Aditya", 2531),
+("Himanshu", 2512);
+
+CREATE VIEW View1 AS
+SELECT cust_name
+FROM Borrower
+INNER JOIN Loan ON Borrower.loan_no = Loan.loan_no
+WHERE branch_name = "Pune_Station"
+ORDER BY cust_name;
+SELECT * FROM View1;
+
+CREATE VIEW View2 AS
+SELECT branch_name, branch_city
+FROM Branch;
+SELECT * FROM View2;
+
+-- Insert operation
+INSERT INTO View2 (branch_name, branch_city) VALUES ('Yerwada', 'Pune');
+SELECT * FROM View2;
+
+-- Update operation
+UPDATE View2 SET branch_name = 'Peachtree' WHERE branch_name = 'Yerwada';
+SELECT * FROM View2;
+
+-- Delete operation
+DELETE FROM View2 WHERE branch_name = 'Peachtree';
+SELECT * FROM View2;
+
+CREATE VIEW View3 AS
+SELECT Borrower.cust_name, Depositor.acc_no
+FROM Borrower JOIN Depositor ON Borrower.cust_name = Depositor.cust_name;
+SELECT * FROM View3;
+
+-- Insert operation
+INSERT INTO Customer (cust_name, cust_street, cust_city) VALUES ("Macho", "Pedgaon", "Ahemadnagar");
+INSERT INTO Account (acc_no, branch_name, balance) VALUES (2502, "Hadapsar", 3000);
+INSERT INTO Loan (loan_no, branch_name, amount) VALUES (160, "Hadapsar", 500);
+INSERT INTO Borrower (cust_name, loan_no) VALUES ("Macho", 160);
+INSERT INTO Depositor(cust_name, Acc_no) VALUES("Macho", 2502);
+SELECT * FROM View3;
+
+-- Update operation
+INSERT INTO Account (acc_no, branch_name, balance) VALUES (2566, 'Hadapsar', 3000);
+UPDATE Depositor SET acc_no = 2566 WHERE cust_name = 'Macho';
+SELECT * FROM View3;
+
+-- Delete operation
+DELETE FROM Borrower WHERE cust_name = 'Macho';
+DELETE FROM Depositor WHERE cust_name = 'Macho';
+SELECT * FROM View3;
+
+SELECT DISTINCT Customer.cust_name
+FROM Customer
+LEFT JOIN Depositor ON Customer.cust_name = Depositor.cust_name
+LEFT JOIN Borrower ON Customer.cust_name = Borrower.cust_name
+WHERE Depositor.acc_no IS NOT NULL OR Borrower.loan_no IS NOT NULL;
+
+SELECT * FROM View1;
+SELECT * FROM View2;
+SELECT * FROM View3;
+
+-- Simple Index
+CREATE INDEX cust_ind ON Customer (cust_city);
+
+-- Unique Index
+CREATE UNIQUE INDEX branch_ind ON Branch (branch_name);
+
+SHOW INDEX FROM Customer;
+SHOW INDEX FROM Branch;
+
+DROP TABLE Depositor;
+DROP TABLE Borrower;
+TRUNCATE TABLE Customer;
+
+CREATE TABLE Companies(comp_id varchar(50), name varchar(50), cost int, year int);
+CREATE TABLE Orders(comp_id varchar(50), domain varchar(50), quantity int);
+
+INSERT INTO Companies (comp_id, name, cost, year) VALUES
+("C001", "ONGC", 2000, 2010),
+("C002", "HPCL", 2500, 2012),
+("C005", "IOCL", 1000, 2014),
+("C006", "BHEL", 3000, 2015);
+
+INSERT INTO Orders (comp_id, domain, quantity) VALUES
+("C001", "Oil", 109),
+("C002", "Gas", 121),
+("C005", "Telecom", 115);
+
+SELECT name, cost, domain, quantity FROM Companies INNER JOIN Orders on Companies.comp_id = Orders.comp_id;
+
+
+SELECT name, cost, domain, quantity FROM Companies lEFT OUTER JOIN Orders ON Companies.comp_id = Orders.comp_id;
+
+SELECT name, cost, domain, quantity FROM Companies RIGHT OUTER JOIN Orders ON Companies.comp_id = Orders.comp_id;
+
+SELECT name, cost FROM Companies UNION SELECT domain, quantity FROM Orders;
+
+CREATE VIEW view1 AS SELECT name, quantity FROM Companies JOIN Orders ON Companies.comp_id = Orders.comp_id;
+SELECT * FROM view1;
+
+CREATE VIEW view2 AS SELECT name, cost FROM Companies;
+SELECT * FROM view2;
+
+-- Insert operation
+INSERT INTO view2 (name, cost) VALUES ("BCCC", 3100);
+SELECT * FROM view2;
+
+-- Update operation
+UPDATE view2 SET cost = 3500 WHERE name = "BCCC";
+SELECT * FROM view2;
+
+-- Delete operation
+DELETE FROM view2 WHERE name = "BCCC";
+SELECT * FROM view2;
+
+SELECT * from view1;
+SELECT * FROM view2;
+
+#LIBRARY_fine
+CREATE TABLE Borrower (
+  roll_no INT,
+  issuer_name VARCHAR(255),
+  issue_date DATE,
+  book_name VARCHAR(255),
+  status VARCHAR(1),
+  PRIMARY KEY (roll_no)
+);
+
+CREATE TABLE Fine (
+  roll_no INT,
+  return_date DATE,
+  amt INT,
+  FOREIGN KEY (roll_no) REFERENCES Borrower (roll_no)
+);
+
+INSERT INTO Borrower VALUES (1, 'Kalas', TO_DATE('2024-10-19', 'YYYY-MM-DD'), 'DBMS', 'I');
+INSERT INTO Borrower VALUES (2, 'Himanshu', TO_DATE('2024-10-01', 'YYYY-MM-DD'), 'TOC', 'I');
+INSERT INTO Borrower VALUES (3, 'MEPA', TO_DATE('2024-10-25', 'YYYY-MM-DD'), 'IoT', 'I');
+INSERT INTO Borrower VALUES (4, 'Kshitij', TO_DATE('2024-10-29', 'YYYY-MM-DD'), '1984', 'I');
+
+DECLARE
+  p_roll NUMBER; -- specify roll number here since Live SQL cannot take input from user
+  -- Eg. p_roll NUMBER := 1; will take roll number 1 as input
+  p_book VARCHAR2(255); -- specify book name here since Live SQL cannot take input from user
+  -- Eg. p_book VARCHAR2(255) := 'DBMS';
+  p_issueDate DATE;
+  totalDays NUMBER;
+  currentDate DATE;
+  fineAmt NUMBER;
+  nodata EXCEPTION;
+
+BEGIN
+  -- Check if roll number is valid
+  IF (p_roll <= 0) THEN
+    RAISE nodata;
+  END IF;
+
+  -- Storing values from table in variables
+  SELECT issue_date INTO p_issueDate FROM Borrower WHERE roll_no = p_roll AND book_name = p_book;
+
+  -- Getting the total days since book issue
+  SELECT TRUNC(SYSDATE) - p_issueDate INTO totalDays FROM dual;
+
+  -- Calculating fine
+  IF (totalDays > 30) THEN
+    fineAmt := totalDays * 50; -- Rs. 50 per day for total days greater than 30
+  ELSIF (totalDays BETWEEN 15 AND 30) THEN
+    fineAmt := totalDays * 5; -- Rs. 5 per day for total days between 15 and 30
+  ELSE
+    fineAmt := 0;
+  END IF;
+
+  -- Inserting data into Fine table
+  IF fineAmt > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Roll no. ' || p_roll || ' has been fined Rs. ' || fineAmt || ' for being ' || totalDays || ' days late.');
+    INSERT INTO Fine VALUES (p_roll, SYSDATE, fineAmt);
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Roll no. ' || p_roll || ' does not have to pay any fine.');
+  END IF;
+  UPDATE Borrower SET status = 'R' WHERE roll_no = p_roll AND book_name = p_book;
+
+EXCEPTION
+  WHEN nodata THEN
+    DBMS_OUTPUT.PUT_LINE('Roll number' || p_roll || ' not found.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occured. Error: ' || SQLERRM);
+
+END;
+/
+
+#area
+
+CREATE TABLE areas (
+  radius INT NOT NULL,
+  area INT
+);
+
+DECLARE
+  v_radius NUMBER; -- specify radius here since Live SQL cannot take input from user
+  -- Eg. v_radius NUMBER := 5 will take radius 5 as input
+  calcedArea NUMBER;
+  invalidData EXCEPTION;
+  psError EXCEPTION;
+
+BEGIN
+  -- if radius is less than 0, raise exception
+  IF (v_radius < 0) THEN
+    RAISE invalidData;
+  ELSIF (v_radius NOT BETWEEN 5 AND 9) THEN
+    RAISE psError;
+  END IF;
+
+  -- calc area
+  calcedArea := 3.14 * v_radius * v_radius;
+  DBMS_OUTPUT.PUT_LINE('For radius ' || v_radius || ' cm, the area is ' || calcedArea || ' sq. cm.');
+
+  -- add data to table
+  INSERT INTO areas VALUES (v_radius, calcedArea);
+  DBMS_OUTPUT.PUT_LINE('Inserted values to areas database.');
+
+EXCEPTION
+  WHEN invalidData THEN
+    DBMS_OUTPUT.PUT_LINE('Radius cannot be less than 0 cms. Please enter a valid value.');
+  WHEN psError THEN
+    DBMS_OUTPUT.PUT_LINE('Problem statement requires the radius to be between 5 and 9 cms.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('An error occured. Error: ' || SQLERRM);
+
+END;
+/
+
+#Grade
+
+CREATE TABLE Stud_Marks (
+  roll INT,
+  name VARCHAR(255),
+  total_marks INT,
+  PRIMARY KEY (roll)
+);
+
+CREATE TABLE Result (
+  roll INT,
+  name VARCHAR(255),
+  class VARCHAR(255),
+  FOREIGN KEY (roll) REFERENCES Stud_Marks (roll)
+);
+
+INSERT INTO Stud_Marks VALUES (1, 'Kshitij', 1400);
+INSERT INTO Stud_Marks VALUES (2, 'Kalas', 500);
+INSERT INTO Stud_Marks VALUES (3, 'Himanshu', 995);
+INSERT INTO Stud_Marks VALUES (4, 'MEPA', 850);
+INSERT INTO Stud_Marks VALUES (5, 'Macho', 900);
+
+CREATE OR REPLACE PROCEDURE proc_Grade (roll_no IN NUMBER) AS
+
+-- declare section
+  p_roll Stud_Marks.roll%TYPE;
+  p_name Stud_Marks.name%TYPE;
+  p_total NUMBER;
+
+BEGIN
+  SELECT roll, name, total_marks INTO p_roll, p_name, p_total FROM Stud_Marks WHERE roll = roll_no;
+
+  IF (p_total <= 1500 AND p_total >= 990) THEN
+    INSERT INTO Result VALUES (p_roll, p_name, 'Distinction');
+    DBMS_OUTPUT.PUT_LINE(p_name || ' (roll no. ' || p_roll || ') has been placed in the DISTINCTION category.');
+  ELSIF (p_total BETWEEN 900 AND 989) THEN
+    INSERT INTO Result VALUES (p_roll, p_name, 'First Class');
+    DBMS_OUTPUT.PUT_LINE(p_name || ' (roll no. ' || p_roll || ') has been placed in the FIRST CLASS.');
+  ELSIF (p_total BETWEEN 825 AND 899) THEN
+    INSERT INTO Result VALUES (p_roll, p_name, 'Higher Second Class');
+    DBMS_OUTPUT.PUT_LINE(p_name || ' (roll no. ' || p_roll || ') has been placed in the HIGHER SECOND CLASS.');
+  ELSE
+    INSERT INTO Result VALUES (p_roll, p_name, 'Fail');
+    DBMS_OUTPUT.PUT_LINE(p_name || ' (roll no. ' || p_roll || ') has FAILED.');
+  END IF;
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No entry for this roll number in the Stud_Marks database.');
+
+END proc_Grade;
+/
+
+DECLARE
+  roll_no NUMBER;
+BEGIN
+  roll_no := &roll_no; -- replace &roll_no with a number for Live SQL since it does not support user input.
+  proc_Grade(roll_no);
+END;
+/
+
+#cursor
+
+CREATE TABLE O_RollCall(
+name VARCHAR(255),
+roll NUMBER(14),
+class VARCHAR(255)
+);
+
+CREATE TABLE N_RollCall(
+name VARCHAR(255),
+roll NUMBER(14),
+class VARCHAR(255)
+);
+
+INSERT INTO O_RollCall VALUES ('Stewie', 1, 'Comp 1');
+INSERT INTO O_RollCall VALUES ('Edie', 2, 'Comp 2');
+INSERT INTO O_RollCall VALUES ('Stomp', 3, 'Comp 3');
+INSERT INTO O_RollCall VALUES ('Lara', 4, 'Comp 1');
+INSERT INTO O_RollCall VALUES ('Foxy', 5, 'Comp 2');
+
+INSERT INTO N_RollCall VALUES ('Stewie', 1, 'Comp 1');
+INSERT INTO N_RollCall VALUES ('Edie', 2, 'Comp 2');
+INSERT INTO N_RollCall VALUES ('Stomp', 3, 'Comp 3');
+INSERT INTO N_RollCall VALUES ('Lara', 4, 'Comp 1');
+INSERT INTO N_RollCall VALUES ('Foxy', 5, 'Comp 2');
+INSERT INTO N_RollCall VALUES ('Gundeti', 6, 'Comp 3');
+INSERT INTO N_RollCall VALUES ('Kalas', 7, 'Comp 2');
+
+DECLARE
+  p_name VARCHAR(255);
+  p_rollno NUMBER(15);
+  p_class VARCHAR(255);
+  CURSOR cc1 IS SELECT * FROM N_RollCall WHERE roll NOT IN (SELECT roll FROM O_RollCall);
+BEGIN
+  OPEN cc1;
+    LOOP
+      FETCH cc1 INTO p_name, p_rollno, p_class;
+      INSERT INTO O_RollCall VALUES (p_name, p_rollno, p_class);
+      EXIT WHEN cc1%notfound;
+      DBMS_OUTPUT.PUT_LINE(p_name || ' ' || p_rollno || ' ' || p_class);
+      END LOOP;
+  CLOSE cc1;
+END;
+/
+
+DECLARE
+  p_name VARCHAR(255);
+  p_rollno NUMBER(15);
+  p_class VARCHAR(255);
+  CURSOR pp1(roll1 NUMBER) IS SELECT * FROM N_RollCall WHERE roll > roll1;
+
+BEGIN
+  OPEN pp1(3);
+    LOOP
+      FETCH pp1 INTO p_name, p_rollno, p_class;
+      EXIT WHEN pp1%notfound;
+      DBMS_OUTPUT.PUT_LINE(p_name || ' ' || p_rollno || ' ' || p_class);
+    END LOOP;
+  CLOSE pp1;
+
+END;
+/
+
+DECLARE
+  total_rows NUMBER(2);
+
+BEGIN
+  UPDATE N_RollCall SET roll = roll + 1;
+  IF sql%notfound THEN
+    dbms_output.put_line('no roll was updated');
+  ELSIF sql%found THEN
+    total_rows := sql%rowcount;
+    DBMS_OUTPUT.PUT_LINE( total_rows || ' roll calls were affected ');
+  END IF;
+END;
+/
+
+# Trigger
+
+CREATE TABLE Library(
+    id NUMBER(12),
+    title VARCHAR(255),
+    dateofissue DATE,
+    author VARCHAR(255)
+);
+
+CREATE TABLE Library_Audit(
+    id NUMBER(12),
+    title VARCHAR(255),
+    dateofaction DATE,
+    author VARCHAR(255),
+    status VARCHAR(255)
+);
+
+INSERT INTO Library VALUES (1, 'Berserk', TO_DATE('2024-07-28','YYYY-MM-DD'), 'Prashant');
+INSERT INTO Library VALUES (2, 'Dark', TO_DATE('2024-07-15','YYYY-MM-DD'), 'Rajendra');
+INSERT INTO Library VALUES (3, 'Hannibal', TO_DATE('2024-07-20','YYYY-MM-DD'), 'Manoj');
+INSERT INTO Library VALUES (4, 'AOT', TO_DATE('2024-07-30','YYYY-MM-DD'), 'Rajesh');
+INSERT INTO Library VALUES (5, 'GOT', TO_DATE('2024-07-19','YYYY-MM-DD'), 'Anil');
+
+CREATE OR REPLACE TRIGGER library_action
+AFTER INSERT OR UPDATE OR DELETE ON Library
+FOR EACH ROW
+BEGIN
+	IF INSERTING THEN
+    	INSERT INTO Library_Audit (id, title, dateofaction, author, status) VALUES (:NEW.id, :NEW.title, current_timestamp, :NEW.author, 'Insert');
+	ELSIF UPDATING THEN
+        INSERT INTO Library_Audit (id, title, dateofaction, author, status) VALUES (:OLD.id, :OLD.title, current_timestamp, :OLD.author, 'Update');
+	ELSIF DELETING THEN
+        INSERT INTO Library_Audit (id, title, dateofaction, author, status) VALUES (:OLD.id, :OLD.title, current_timestamp, :OLD.author, 'Delete');
+	END IF;
+END;
+/
+
+INSERT INTO Library VALUES (15, 'CREW', TO_DATE('2024-07-22','YYYY-MM-DD'), 'Ramesh');
+INSERT INTO Library VALUES (14, 'Ninteen Eighty Four', TO_DATE('2024-07-01','YYYY-MM-DD'), 'Omkar');
+
+SELECT * FROM Library;
+SELECT * FROM Library_Audit;
+
+UPDATE Library SET id = 6, title = 'Sherlock', author = 'Deepak' where id = 3;
+UPDATE Library SET id = 7, title = 'MR. ROBOT', author = 'Varad' where id = 4;
+
+SELECT * FROM Library;
+SELECT * FROM Library_Audit;
+
+DELETE FROM Library WHERE id = 1;
+DELETE FROM Library WHERE id = 5;
+
+SELECT * FROM Library;
+SELECT * FROM Library_Audit;
+
+#mongo connectivity
+
+sudo python3 -m pip install pymongo
+
+###Open mongo
+use test1 
+db.createCollection("emp")
+
+###Open Python
+from pymongo import MongoClient
+client=MongoClient("mongodb://127.0.0.1:27017")
+database=client.test1
+collection=database.emp
+collection.insert_one({"name":"smartphone","quantity":"10","price":"50000"})
+print("inserted")
+client.close()
+
+sudo python3 -m pip install pymongo
+
+###Open mongo
+use test1 
+db.createCollection("emp")
+
+###Open Python
+from pymongo import MongoClient
+client=MongoClient("mongodb://127.0.0.1:27017")
+database=client.test1
+collection=database.emp
+collection.insert_one({"name":"smartphone","quantity":"10","price":"50000"})
+print("inserted")
+client.close()
+
+
+Ubuntu open command prompt then
+1. pip install mysql-connector
+2
+>sudo mysql -u root -p
+>USE mysql;
+>UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+>FLUSH PRIVILEGES;
+>exit;
+>service mysql restart
+3. then again open mysql
+> create database db3;
+> use db3;
+> create table stud1(name varchar(10), rno int);
+> exit;
+4.on root prompt execute following python file ( which is saved in home
+directory)
+file name is abc.py
+> python3 abc.py
+5. then open mysql
+> use db3
+> select * from stud1;
+************
+abc.py
+**
+import mysql.connector
+mydb = mysql.connector.connect(
+ host="localhost",
+ user=" root",
+# password="",
+ database="db3"
+)
+mycursor = mydb.cursor()
+sql = "INSERT INTO stud1 (name, rno) VALUES ('Ram', 22)"
+mycursor.execute(sql)
+mydb.commit()
+print(mycursor.rowcount, "record inserted.")
+
+
+#mysql connectivity
+
+Commands for dbms connectivity
+
+1. sudo mysql
+2. use mysql
+3. update user set plugin='mysql_native_password' where user='root';
+4. flush privileges;
+5. exit;
+
+#crud operation
+
+use empDB
+db.createCollection("Employee")
+
+db.Employee.insertMany([
+    {
+        Empid: 1,
+        Name: { FName: "Ayush", LName: "Kalaskar" },
+        Company_name: "Oscorp",
+        Salary: 50000,
+        Designation: "Programmer",
+        Age: 28,
+        Expertise: ["Java", "Spring", "MongoDB"],
+        DOB: "1995-04-15",
+        Email_id: "ayush.kalaskar@oscorp.com",
+        Contact: "9876543210",
+        Address: [{ PAddr: "123, Street A, Pune", LAddr: "Maharashtra" }]
+    },
+    {
+        Empid: 2,
+        Name: { FName: "Himanshu", LName: "Patil" },
+        Company_name: "Hammer Industries",
+        Salary: 60000,
+        Designation: "Developer",
+        Age: 30,
+        Expertise: ["JavaScript", "React", "Node.js"],
+        DOB: "1993-06-25",
+        Email_id: "himanshu.patil@hammerindustries.com",
+        Contact: "9876543211",
+        Address: [{ PAddr: "234, Street B, Bangalore", LAddr: "Karnataka" }]
+    },
+    {
+        Empid: 3,
+        Name: { FName: "Mehul", LName: "Patil" },
+        Company_name: "Lex Corp.",
+        Salary: 45000,
+        Designation: "Tester",
+        Age: 29,
+        Expertise: ["Selenium", "Python"],
+        DOB: "1994-08-12",
+        Email_id: "mehul.patil@lexcorp.org",
+        Contact: "9876543212",
+        Address: [{ PAddr: "345, Street C, Hyderabad", LAddr: "Telangana" }]
+    },
+    {
+        Empid: 4,
+        Name: { FName: "Tanmay", LName: "Machkar" },
+        Company_name: "Wayne Industries",
+        Salary: 70000,
+        Designation: "Project Manager",
+        Age: 35,
+        Expertise: ["Agile", "Scrum"],
+        DOB: "1988-02-20",
+        Email_id: "tanmay.machkar@batmobile.com",
+        Contact: "9876543213",
+        Address: [{ PAddr: "456, Street D, Chennai", LAddr: "Tamil Nadu" }]
+    },
+    {
+        Empid: 5,
+        Name: { FName: "Rajendra", LName: "Patil" },
+        Company_name: "Stark Industries",
+        Salary: 32000,
+        Designation: "Programmer",
+        Age: 27,
+        Expertise: ["Java", "Angular"],
+        DOB: "1996-03-30",
+        Email_id: "rajendra.patil@starkindustries.com",
+        Contact: "9876543214",
+        Address: [{ PAddr: "567, Street E, Delhi", LAddr: "Delhi" }]
+    },
+    {
+        Empid: 6,
+        Name: { FName: "Rajesh", LName: "Patil" },
+        Company_name: "Roxonn",
+        Salary: 50000,
+        Designation: "Designer",
+        Age: 32,
+        Expertise: ["Photoshop", "Illustrator"],
+        DOB: "1991-11-11",
+        Email_id: "rajesh.patil@roxonn.com",
+        Contact: "9876543215",
+        Address: [{ PAddr: "678, Street F, Kolkata", LAddr: "West Bengal" }]
+    },
+    {
+        Empid: 7,
+        Name: { FName: "Prashant", LName: "Kalaskar" },
+        Company_name: "Y-Space",
+        Salary: 45000,
+        Designation: "Tester",
+        Age: 26,
+        Expertise: ["Selenium", "Java"],
+        DOB: "1997-07-07",
+        Email_id: "prashant.kalaskar@y-space.com",
+        Contact: "9876543216",
+        Address: [{ PAddr: "789, Street G, Pune", LAddr: "Maharashtra" }]
+    },
+    {
+        Empid: 8,
+        Name: { FName: "Aditya", LName: "Gundeti" },
+        Company_name: "SNASA",
+        Salary: 80000,
+        Designation: "Architect",
+        Age: 33,
+        Expertise: ["Cloud", "Microservices"],
+        DOB: "1990-01-01",
+        Email_id: "aditya.gundeti@snasa.org",
+        Contact: "9876543217",
+        Address: [{ PAddr: "890, Street H, Noida", LAddr: "Uttar Pradesh" }]
+    },
+    {
+        Empid: 9,
+        Name: { FName: "Manoj", LName: "Patil" },
+        Company_name: "MEPA",
+        Salary: 40000,
+        Designation: "Developer",
+        Age: 31,
+        Expertise: ["C#", ".NET"],
+        DOB: "1992-05-05",
+        Email_id: "manoj.patil@mepa.com",
+        Contact: "9876543218",
+        Address: [{ PAddr: "901, Street I, Jaipur", LAddr: "Rajasthan" }]
+    },
+    {
+        Empid: 10,
+        Name: { FName: "Afan", LName: "Shaikh" },
+        Company_name: "Vought",
+        Salary: 39000,
+        Designation: "HR",
+        Age: 29,
+        Expertise: ["Recruitment", "Employee Relations"],
+        DOB: "1994-09-09",
+        Email_id: "afan.shaikh@vought.com",
+        Contact: "9876543219",
+        Address: [{ PAddr: "1234, Street J, Ahmedabad", LAddr: "Gujarat" }]
+    }
+])
+
+db.Employee.find({ Designation: "Programmer", Salary: { $gt: 30000 } })
+
+db.Employee.update(
+    { Designation: "Tester", Company_name: "Y-Space", Age: 25 },
+    { $setOnInsert: { Empid: 11, Name: { FName: "Anil", LName: "Salvi" }, Salary: 30000, DOB: "1998-01-01", Email_id: "anil.salvi@y-space.com", Contact: "9876543220", Address: [{ PAddr: "123 Street", LAddr: "Mumbai" }] } },
+    { upsert: true }
+)
+
+db.Employee.find({ $or: [{ Age: { $lt: 30 } }, { Salary: { $gt: 40000 } }] })
+
+
+db.Employee.find({ Address: { $elemMatch: { city: "Pune", Pin_code: "411001" } } })
+
+db.Employee.updateMany(
+    { Company_name: "Oscorp" },
+    { $inc: { Salary: 2000 } }
+)
+
+db.Employee.find({ Designation: { $ne: "Developer" } })
+
+db.Employee.find(
+    { Company_name: "Wayne Industries" },
+    { _id: 1, Designation: 1, Address: 1, Name: 1 }
+)
+
+db.Employee.find({ Designation: { $in: ["Developer", "Tester"] } })
+
+db.Employee.find({ Expertise: { $all: ["Cloud", "Microservices"] } })
+
+db.Employee.deleteMany({ Designation: "Developer" })
+
+#Aggregate and indexing
+
+db.Employee.aggregate([
+    {
+        $group: {
+            _id: "$Designation",
+            TotalSalary: { $sum: "$Salary" }
+        }
+    },
+    {
+        $match: {
+            TotalSalary: { $gt: 20000 }
+        }
+    }
+])
+
+
+db.Employee.aggregate([
+  {
+    $match: {
+      Designation: "Developer"
+    }
+  },
+  {
+    $group: {
+      _id: "$Address.PAddr",
+      Total: { $sum: "$Salary" }
+    }
+  }
+])
+
+
+db.Employee.aggregate([
+    {
+        $match: { Designation: "Tester" }
+    },
+    {
+        $group: {
+            _id: "$Company_name",
+            TotalSalary: { $sum: "$Salary" }
+        }
+    }
+])
+
+
+db.Employee.aggregate([
+    {
+        $project: {
+            _id: 1,
+            Name: { $toUpper: { $concat: ["$Name.FName", " ", "$Name.LName"] } }
+        }
+    },
+    {
+        $sort: { Name: 1 }
+    }
+])
+
+
+db.Employee.countDocuments()
+
+
+db.Employee.aggregate([
+    {
+        $group: {
+            _id: "$Designation",
+            AvgSalary: { $avg: "$Salary" }
+        }
+    },
+    {
+        $sort: { AvgSalary: 1 }
+    }
+])
+
+
+db.Employee.aggregate([
+    {
+        $match: { "Name.FName": "Aditya" }
+    },
+    {
+        $unwind: "$Expertise"
+    },
+    {
+        $project: { Expertise: 1 }
+    }
+])
+
+db.Employee.aggregate([
+    {
+        $unwind: "$Expertise"
+    },
+    {
+        $group: {
+            _id: "$Expertise",
+            TotalCount: { $sum: 1 }
+        }
+    }
+])
+
+db.Employee.aggregate([
+    {
+        $match: { "Address.PAddr": { $regex: "Pune" } }
+    },
+    {
+        $project: { Designation: 1 }
+    }
+])
+
+
+db.Employee.aggregate([
+    {
+        $group: {
+            _id: "$Company_name",
+            MaxSalary: { $max: "$Salary" },
+            MinSalary: { $min: "$Salary" }
+        }
+    }
+])
+
+db.Employee.createIndex({ Designation: 1 })
+
+db.Employee.createIndex({ "Name.FName": 1, Age: -1 })
+
+db.Employee.createIndex({ Expertise: 1 })
+
+db.Employee.getIndexes()
+
+db.Employee.reIndex()
+
+db.Employee.dropIndex("Designation_1")
+
+db.Employee.dropIndexes()
+
+#map reduce
+
+db.Employee.mapReduce(
+    function() {
+        emit(this.Company_name, this.Salary);
+    },
+    function(key, values) {
+        return Array.sum(values);
+    },
+    { out: "total_salary_per_company" }
+);
+
+
+db.Employee.mapReduce(
+    function() {
+        if (this.Company_name === "Oscorp") {
+            emit(this.Company_name, this.Salary);
+        }
+    },
+    function(key, values) {
+        return Array.sum(values);
+    },
+    { out: "total_salary_oscorp" }
+);
+
+
+db.Employee.mapReduce(
+    function() {
+        if (this.Address.some(addr => addr.PAddr.includes("Pune"))) {
+            emit("Pune", this.Salary);
+        }
+    },
+    function(key, values) {
+        return Array.avg(values);
+    },
+    { out: "avg_salary_pune" }
+);
+
+db.Employee.mapReduce(
+    function() {
+        if (this.Company_name === "Wayne Industries") {
+            emit(this.Designation, this.Salary);
+        }
+    },
+    function(key, values) {
+        return Array.sum(values);
+    },
+    { out: "total_salary_wayne" }
+);
+
+db.Employee.mapReduce(
+    function() {
+        this.Address.forEach(function(addr) {
+            if (addr.LAddr === "Maharashtra") {
+                emit("Maharashtra", 1);
+            }
+        });
+    },
+    function(key, values) {
+        return Array.sum(values);
+    },
+    { out: "count_state_maharashtra" }
+);
+
+db.Employee.mapReduce(
+    function() {
+        if (this.Age > 40) {
+            this.Address.forEach(function(addr) {
+                if (addr.LAddr === "Telangana") {
+                    emit("Telangana_Age_Above_40", 1);
+                }
+            });
+        }
+    },
+    function(key, values) {
+        return Array.sum(values);
+    },
+    { out: "count_telangana_age_above_40" }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
